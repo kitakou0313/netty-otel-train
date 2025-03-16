@@ -1,7 +1,6 @@
 package com.example;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.*;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -9,6 +8,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 
 /**
@@ -22,8 +22,8 @@ import io.netty.handler.codec.http.HttpServerCodec;
     }
 
     public void start() throws InterruptedException{
-        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-        EventLoopGroup workerGroup = new NioEventLoopGroup(1);
+        EventLoopGroup bossGroup = new NioEventLoopGroup();
+        EventLoopGroup workerGroup = new NioEventLoopGroup();
 
         try{
             ServerBootstrap bootstrap = new ServerBootstrap();
@@ -33,10 +33,12 @@ import io.netty.handler.codec.http.HttpServerCodec;
                 protected void initChannel(SocketChannel ch){
                     ChannelPipeline pipeline = ch.pipeline();
                     pipeline.addLast(new HttpServerCodec());
+                    pipeline.addLast(new HttpObjectAggregator(65536));
                     pipeline.addLast(new HttpHandler());
                 }
             });
             ChannelFuture future = bootstrap.bind(port).sync();
+            System.out.println("Netty HTTP Server started on port " + port);
             future.channel().closeFuture().sync();
         } finally {
             bossGroup.shutdownGracefully();
@@ -44,9 +46,9 @@ import io.netty.handler.codec.http.HttpServerCodec;
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         int port = 8080;
-        new NettyServer(port);
+        new NettyServer(port).start();
     }
     
 }
