@@ -1,5 +1,6 @@
 package com.example;
 
+import java.lang.foreign.MemorySegment.Scope;
 import java.nio.charset.StandardCharsets;
 
 import io.netty.channel.ChannelHandlerContext;
@@ -9,12 +10,26 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.Tracer;
 
 public class HttpHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+    private final Tracer tracer;
+
+    public HttpHandler(Tracer tracer) {
+        this.tracer = tracer;
+    }
     
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest msg) throws Exception {
-        String responseContent = "Hello, Netty HTTP Server!";
+
+        Span span = tracer.spanBuilder("Doing some work in Netty HTTP Handler").startSpan();
+
+        try (io.opentelemetry.context.Scope scope = span.makeCurrent()) {
+            String responseContent = "Hello, Netty HTTP Server!";
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
         FullHttpResponse response = new DefaultFullHttpResponse(
             msg.protocolVersion(),
             HttpResponseStatus.OK,
