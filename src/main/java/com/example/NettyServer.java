@@ -10,12 +10,16 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
+import io.opentelemetry.api.GlobalOpenTelemetry;
+import io.opentelemetry.api.trace.Tracer;
 
 /**
  * Hello world!
  *
  */public class NettyServer {
     private final int port;
+    private static final Tracer tracer = GlobalOpenTelemetry.getTracer("my-app");
+
 
     public NettyServer(int port){
         this.port = port;
@@ -34,7 +38,7 @@ import io.netty.handler.codec.http.HttpServerCodec;
                     ChannelPipeline pipeline = ch.pipeline();
                     pipeline.addLast(new HttpServerCodec());
                     pipeline.addLast(new HttpObjectAggregator(65536));
-                    pipeline.addLast(new HttpHandler());
+                    pipeline.addLast(new HttpHandler(tracer));
                 }
             });
             ChannelFuture future = bootstrap.bind(port).sync();

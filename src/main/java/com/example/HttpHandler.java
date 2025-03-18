@@ -1,6 +1,5 @@
 package com.example;
 
-import java.lang.foreign.MemorySegment.Scope;
 import java.nio.charset.StandardCharsets;
 
 import io.netty.channel.ChannelHandlerContext;
@@ -25,10 +24,14 @@ public class HttpHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
         Span span = tracer.spanBuilder("Doing some work in Netty HTTP Handler").startSpan();
 
+        String responseContent = "";
         try (io.opentelemetry.context.Scope scope = span.makeCurrent()) {
-            String responseContent = "Hello, Netty HTTP Server!";
+            responseContent = "Hello, Netty HTTP Server!";
+            span.setAttribute("message", responseContent);
         } catch (Exception e) {
             // TODO: handle exception
+        } finally {
+            span.end();
         }
         FullHttpResponse response = new DefaultFullHttpResponse(
             msg.protocolVersion(),
