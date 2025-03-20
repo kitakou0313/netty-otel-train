@@ -23,3 +23,15 @@ services:
 
     # Use "forwardPorts" in **devcontainer.json** to forward an app port locally. 
     # (Adding the "ports" property to this file will not forward from a Codespace.)
+  jaeger:
+    image: jaegertracing/all-in-one:1.53
+    container_name: jaeger
+    restart: always
+    ports:
+      - "16686:16686"  # Jaeger UI (http://localhost:16686)
+      - "4317:4317"    # OpenTelemetry Protocol (OTLP) gRPC
+      - "4318:4318"    # OpenTelemetry Protocol (OTLP) HTTP
+      - "14268:14268"  # Jaeger HTTP ingest API
+      - "14250:14250"  # Jaeger gRPC ingest API
+    environment:
+      - COLLECTOR_ZIPKIN_HTTP_PORT=9411  # Zipkin 互換の API（必要なら）
