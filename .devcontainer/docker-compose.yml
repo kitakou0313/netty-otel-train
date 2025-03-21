@@ -21,17 +21,26 @@ services:
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
 
-    # Use "forwardPorts" in **devcontainer.json** to forward an app port locally. 
-    # (Adding the "ports" property to this file will not forward from a Codespace.)
-  jaeger:
-    image: jaegertracing/all-in-one:1.53
-    container_name: jaeger
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
     restart: always
     ports:
-      - "16686:16686"  # Jaeger UI (http://localhost:16686)
-      - "4317:4317"    # OpenTelemetry Protocol (OTLP) gRPC
-      - "4318:4318"    # OpenTelemetry Protocol (OTLP) HTTP
-      - "14268:14268"  # Jaeger HTTP ingest API
-      - "14250:14250"  # Jaeger gRPC ingest API
+      - "3000:3000" # Grafana UI (http://localhost:3000)
     environment:
-      - COLLECTOR_ZIPKIN_HTTP_PORT=9411  # Zipkin 互換の API（必要なら）
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
+
+  tempo:
+    image: grafana/tempo:latest
+    container_name: tempo
+    restart: always
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+      - ./tempo.yaml:/etc/tempo.yaml
+    ports:
+      - "3200:3200"   # Tempo Query (http://localhost:3200)
+      - "4317:4317"   # OTLP gRPC
+      - "4318:4318"   # OTLP HTTP
