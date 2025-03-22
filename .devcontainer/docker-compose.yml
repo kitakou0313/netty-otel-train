@@ -1,20 +1,10 @@
 version: '3.8'
 
-volumes:
-  postgres-data:
-
 services:
   app:
     build: 
       context: .
       dockerfile: Dockerfile
-    environment:
-      # NOTE: POSTGRES_DB/USER/PASSWORD should match values in db container
-        POSTGRES_PASSWORD: postgres
-        POSTGRES_USER: postgres
-        POSTGRES_DB: postgres
-        POSTGRES_HOSTNAME: postgresdb
-
     volumes:
       - ../..:/workspaces:cached
       
@@ -39,8 +29,11 @@ services:
     restart: always
     command: [ "-config.file=/etc/tempo.yaml" ]
     volumes:
-      - ./tempo.yaml:/etc/tempo.yaml
+      - ../tempo.yaml:/etc/tempo.yaml
     ports:
       - "3200:3200"   # Tempo Query (http://localhost:3200)
       - "4317:4317"   # OTLP gRPC
       - "4318:4318"   # OTLP HTTP
+
+volumes:
+  grafana-data:
