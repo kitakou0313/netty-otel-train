@@ -9,7 +9,5 @@ export JAVA_TOOL_OPTIONS="-javaagent:./opentelemetry-javaagent.jar" \
   OTEL_METRICS_EXPORTER=logging \
   OTEL_LOGS_EXPORTER=logging \
   OTEL_EXPORTER_OTLP_ENDPOINT=http://tempo:4318 \
-  OTEL_METRIC_EXPORT_INTERVAL=15000
-
-mvn clean package && java -jar target/netty-app-1.0-SNAPSHOT.jar
+  OTEL_METRIC_EXPORT_INTERVAL=15000 && mvn clean package && java -jar target/netty-app-1.0-SNAPSHOT.jar
 ```
