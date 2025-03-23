@@ -10,6 +10,7 @@ for ((i=1; i<=COUNT; i++))
 do
   echo "Sending request $i..."
   curl -X GET "$URL"
+  echo ""
 done
 
 echo
