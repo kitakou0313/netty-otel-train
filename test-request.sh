@@ -12,4 +12,5 @@ do
   curl -X GET "$URL"
 done
 
+echo
 echo "All requests sent."
