@@ -14,7 +14,7 @@ export const options = {
 // テストのシナリオを記述する
 export default function () {
   // Make a GET request to the target URL
-  http.get('https://quickpizza.grafana.com');
+  http.get('http://localhost:8080');
 
   // Sleep for 1 second to simulate real-world usage
   sleep(1);
