@@ -6,6 +6,7 @@ import { sleep } from 'k6';
 
 // opption
 // テストの細かい設定を行う
+// https://grafana.com/docs/k6/latest/using-k6/k6-options/reference/#vus
 export const options = {
   iterations: 100,
   vus: 10
