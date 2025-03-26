@@ -7,7 +7,8 @@ import { sleep } from 'k6';
 // opption
 // テストの細かい設定を行う
 export const options = {
-  iterations: 10,
+  iterations: 100,
+  vus: 10
 };
 
 // Defalut function
