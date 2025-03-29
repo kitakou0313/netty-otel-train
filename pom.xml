@@ -26,12 +26,30 @@
     </dependency>
     <dependency>
         <groupId>io.modelcontextprotocol.sdk</groupId>
-        <artifactId>mcp-bom</artifactId>
-        <version>0.8.1</version>
-        <type>pom</type>
-        <scope>import</scope>
+        <artifactId>mcp</artifactId>
+    </dependency>
+    <!-- Spring WebFlux-based SSE client and server transport -->
+    <dependency>
+        <groupId>io.modelcontextprotocol.sdk</groupId>
+        <artifactId>mcp-spring-webflux</artifactId>
+    </dependency>
+    <!-- Spring WebMVC-based SSE server transport -->
+    <dependency>
+        <groupId>io.modelcontextprotocol.sdk</groupId>
+        <artifactId>mcp-spring-webmvc</artifactId>
+    </dependency>
+    </dependencies>
+    <dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>io.modelcontextprotocol.sdk</groupId>
+            <artifactId>mcp-bom</artifactId>
+            <version>0.8.1</version>
+            <type>pom</type>
+            <scope>import</scope>
         </dependency>
-  </dependencies>
+    </dependencies>
+</dependencyManagement>
 <build>
     <plugins>
         <plugin>
@@ -62,4 +80,3 @@
     </plugins>
 </build>
 </project>
-
