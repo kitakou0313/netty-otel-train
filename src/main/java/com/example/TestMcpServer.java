@@ -20,7 +20,5 @@ public class TestMcpServer {
             .build())
         .build();
 
-
-        server.addTool(null);
     }
 }
